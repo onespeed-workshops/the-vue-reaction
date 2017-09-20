@@ -1,59 +1,6 @@
-import React, { Component, PureComponent } from 'react';
-
-
-class Todo extends PureComponent {
-  render() {
-    const props = this.props
-    return (
-      <div>
-        <form onSubmit={
-          (e) => {
-            e.preventDefault()
-            if (!props.localTodo.value) {
-              return
-            }
-            props.onSubmit(props.localTodo)
-          }
-        }>
-          <input
-            type="text"
-            onChange={(e) => props.onLocalUpdate({ value: e.target.value })}
-            value={props.localTodo.value}
-          />
-          <button>Submit</button>
-        </form>
-        <div>
-          <ul>
-            {props.todos.map((todo, i) => {
-                return (
-                  <li key={todo.id}>
-                    { todo.value }{ ' ' }
-                    <button onClick={ (e) => {
-                      e.preventDefault()
-                      props.onDelete(todo.id)
-                    }}>
-                      [X]
-                    </button>
-                  </li>
-                )
-              })
-            }
-          </ul>
-        </div>
-      </div>
-    )
-  }
-}
-
-Todo.defaultProps = {
-  todos: [],
-  localTodo: { value: '' },
-  onDelete: () => {},
-  onSubmit: () => {},
-  onLocalUpdate: () => {}
-};
-
-
+import React, { Component } from 'react';
+import { TodoForm } from './TodoForm'
+import { TodoList } from './TodoList'
 
 class Root extends Component {
   constructor(props) {
@@ -63,12 +10,14 @@ class Root extends Component {
       todos: []
     }
   }
+
   onLocalUpdate(newTodo) {
     this.setState({
       ...this.state,
       localTodo: { ...newTodo }
     })
   }
+
   onSubmit(newTodo) {
     const currentTodos = this.state.todos
     const id = currentTodos.length;
@@ -82,23 +31,28 @@ class Root extends Component {
     }
     this.setState(newState)
   }
+
   onDelete(id) {
     const todos = this.state.todos.filter((todo) => todo.id !== id)
     this.setState({ ...this.state, todos })
   }
+
   render() {
     return (
-      <div>
-        <Todo
+      <div className="todo-app">
+        <h1>REACT</h1>
+        <TodoForm
           localTodo={this.state.localTodo}
-          onLocalUpdate={this.onLocalUpdate.bind(this)}
           onSubmit={this.onSubmit.bind(this)}
-          onDelete={this.onDelete.bind(this)}
+          onLocalUpdate={this.onLocalUpdate.bind(this)}
+        />
+        <TodoList
           todos={this.state.todos}
+          onDelete={this.onDelete.bind(this)}
         />
       </div>
     );
   }
 }
 
-export default Root;
+export default Root
