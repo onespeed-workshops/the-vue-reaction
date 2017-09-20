@@ -3,8 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 
+import './0-mount';
+
 function main(RootApp = App) {
-  ReactDOM.render(<RootApp />, document.getElementById('root'));
+  ReactDOM.render(<RootApp />, document.getElementById('react-app'));
 }
 
 switch (document.readyState) {
